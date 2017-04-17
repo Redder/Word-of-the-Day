@@ -31,7 +31,7 @@
                 <div class="container">
                     <p>Please enter the word of the day: </p>
                     <input type="text" ng-model="mC.user_word">
-                    <button class="btn btn-default" ng-click="updateWord()">Update!</button>
+                    <button class="btn btn-default" ng-click="mC.updateWord(mC.user_word)">Update!</button>
                 </div>
 
             </div>
@@ -40,7 +40,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <script src="js/scripts.js" /></script>
+    <!--<script src="js/scripts.js" /></script>-->
     <script src="controller/mainController.js" /></script>
 
 </body>

@@ -1,13 +1,19 @@
 var express = require('express');
 var mongo = require('mongojs');
 var app = express();
+
 var mongojs = require('mongojs');
-//var db = mongojs('127.0.0.1:27017/contactApp', ['contactApp']);
+var db = mongojs('127.0.0.1:27017/wordOfTheDay', ['wordOfTheDay']);
+var id = require('mongodb').ObjectID('58f44d59f8b5ddcd82efb4e8');
+
 var bodyParser = require('body-parser');
 var server = app.listen(3000);
 
-//var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server);
 
+var extras = require('./functions.js');
+
+var socket;
 
 app.use(express.static(__dirname + "/public"))
 app.use(bodyParser.json());
@@ -17,18 +23,43 @@ app.get('/', function(req, res) {
 	res.render('public/index.html');
 });
 
-/*
-io.on('connection', function(socket){
-  console.log('User connected');
-
-  socket.emit('message', { name: 'Lisander', message: 'Example' });
-  socket.on('disconnect', function() {
-  	console.log('User disconnected');
-  });
+app.get('/wordOfTheDay', function(req, res) {
+	db.wordOfTheDay.find({ _id: id}, function(err, data) { 
+		console.log(data);
+		if (err) console.log(err); // If there is an error, log it
+		
+		res.send( {data} );
+	});
 });
-*/
-app.get('/socket', function(req, res) {
-	res.send(socket);
+
+app.post('/wordOfTheDay', function(req, res) {
+	db.wordOfTheDay.findAndModify({
+    query: { _id: id },
+    update: { $set: { word: req.body.word, time: extras.getServerTime() } },
+    new: false
+	}, function (err, doc) {
+		console.log('Queried the database');
+	    if (err) {
+	    	res.send({ error: err });
+	    	console.log('Error Updating Word');
+	    } else {
+	    	db.wordOfTheDay.find({ _id: id}, function(err, data) { 
+				console.log('New word is ' + data[0].word);
+				//Here I would tell the server to tell EVERY client connected to get the new word. how can I do this?
+				io.sockets.emit('update', data);
+			});
+	    	res.send({ success: 1 })
+	    };
+	})
+});
+
+io.on('connection', function(socket){	// When we get a connection
+  socket = socket;
+  console.log('User connected');	// Log a User Connected
+  
+  socket.on('disconnect', function() {	// When the user disconnects
+  	console.log('User disconnected');	// Log the user disconnected
+  });
 });
 
 console.log('Server running in port 3000');
