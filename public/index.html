@@ -28,10 +28,12 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="container">
+                <div class="container bottom">
                     <p>Please enter the word of the day: </p>
                     <input type="text" ng-model="mC.user_word">
                     <button class="btn btn-default" ng-click="mC.updateWord(mC.user_word)">Update!</button>
+                    <br> <br>
+                    <span class="timeWord">Last time word was changed: {{ mC.wordTime }}</span>
                 </div>
 
             </div>

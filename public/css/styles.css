@@ -8,15 +8,13 @@ body {
 }
 
 h3 {
-    color: #f4f4f4;
-
-
-    
+    color: #f4f4f4;    
 }
 
 h2 {
     color: #f4f4f4;
-    font-size: 45px;
+    font-size: 96px;
+    margin-top: 110px;
 }
 
 .row {
@@ -25,4 +23,13 @@ h2 {
 
 p {
     color: #E6B89E;
+    font-size: 10px;
+}
+
+.timeWord {
+    color: #E6B89E;
+}
+
+.bottom {
+    margin-top: 200px;
 }
